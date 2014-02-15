@@ -4,6 +4,8 @@ This project aims to track edge points starting from an inner circle of a ring m
 
 An example of a retinal image is shown below:
 
+![alt tag](https://raw2.github.com/niufuren/vessel-edge-track/master/images/image1.png)
 
+The processing result is the image below, where Canny edge detection is marked in blue, the ring mask is marked in green, and the tracked edge points are marked in red. The detailed coordinates of the tracked edge points can be found in [here](https://raw2.github.com/niufuren/vessel-edge-track/master/results/edgePointCoordinate.txt)
 
-The processing result is the image below, where Canny edge detection is marked in blue, the ring mask is marked in green, and the tracked edge points are marked in red. The detailed coordinates of the tracked edge points can be found in 
+![alt tag](https://raw2.github.com/niufuren/vessel-edge-track/master/results/result.jpg)
