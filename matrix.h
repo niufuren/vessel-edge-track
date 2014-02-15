@@ -3,7 +3,7 @@
  *  retinal
  *
  *  Created by Juan Lu on 11/02/14.
- *  Copyright 2014 Melb uni. All rights reserved.
+ *  
  *
  */
 

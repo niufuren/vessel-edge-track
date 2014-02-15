@@ -16,20 +16,20 @@ int main (int argc, char * const argv[]) {
 	cvCanny( img, img_e, lowThresh*7*7, highThresh*7*7, 7 );
 	
 	//the center point	
-	int c_x=1923;
-	int c_y=1035;
+	int centerX=1923;
+	int centerY=1035;
 	
 	//the size of the image
 	int width=img->width;
 	int height=img->height;
 	
-	ImageProcessing ImgProcess(c_x,c_y,height, width);
+	ImageProcessing ImgProcess(centerX,centerY,height, width);
 	
 	ImgProcess.setEdges(img_e);
 	
-	//set mask image
-	double r1=360; //inner circle radius
-	double r2=540; //outer circle radius
+	//set the radii of the ring mask image
+	double r1=360; //the inner circle radius
+	double r2=540; //the outer circle radius
 	
 	
 	ImgProcess.setRingMaskAndEdgeInRing(r2,r1);
@@ -45,6 +45,7 @@ int main (int argc, char * const argv[]) {
 	cvShowImage(name, img);
 	cvResizeWindow(name, 1000, 1000);
 	cvWaitKey(0);
+	
 	// Release
 	cvReleaseImage( &img );
 	cvDestroyWindow( name );

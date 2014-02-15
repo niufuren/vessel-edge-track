@@ -3,7 +3,7 @@
  *  retinal
  *
  *  Created by Juan Lu on 11/02/14.
- *  Copyright 2014 Melb uni. All rights reserved.
+ * 
  *
  */
 
@@ -102,8 +102,6 @@ Matrix<T>& Matrix<T>::Img2Matrix(IplImage* img)
 {
 	int Rows=img->height;
 	int Cols=img->width;
-	
-	//createMatrix(nRows, nCols);
 	
 	for (int i=0; i<Rows; i++)
 		for (int j=0; j<Cols; j++)

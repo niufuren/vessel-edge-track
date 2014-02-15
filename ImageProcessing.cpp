@@ -3,7 +3,7 @@
  *  retinal
  *
  *  Created by Juan Lu on 11/02/14.
- *  Copyright 2014 Melb uni. All rights reserved.
+ *  
  *
  */
 
@@ -17,84 +17,44 @@ void ImageProcessing::setRingMaskAndEdgeInRing(double r1, double r2)
     Matrix<double> m1(height,width);
 	Matrix<double> m2(height,width);
 	
-	m1.CreateCircleMask(c_x,c_y,r1);
-	m2.CreateCircleMask(c_x,c_y,r2);
+	m1.CreateCircleMask(centerX,centerY,r1);
+	m2.CreateCircleMask(centerX,centerY,r2);
 	
-	circleMask->SubMatrix(m1, m2);
-	EdgeInRing->AndMatrix(*myEdge, *circleMask);
+	ringMask->SubMatrix(m1, m2);
+	edgeInRing->AndMatrix(*myEdge, *ringMask);
 		
 }
 
 void ImageProcessing::getEdgesFrom(double r)
 {
 	
-	const double pi=3.1415926;
-	
-	
 	Matrix<bool> FlagEdge(height, width);
 	FlagEdge.InitMatrix();
 	
 	MyContour* c=seq;
 	MyContour* temp_seq;
-	//r=r+1;
-	//int cur_i, cur_j;
-//	for ( cur_i=c_x-r; cur_i<c_x+r; cur_i++)
-//		for ( cur_j=c_y-r; cur_j<c_y+r; cur_j++)
-	for(double theta=0; theta<2*pi; theta=theta+0.002)
+
+	int cur_px, cur_py;
+
+	for ( cur_px=centerX-r-1; cur_px<centerX+r+1; cur_px++)
+		for ( cur_py=centerY-r-1; cur_py<centerY+r+1; cur_py++)
 	{
-		int cur_px, cur_py;
-		
-		int cur_px1, cur_py1;
-		
+			
 		double d2=0;
-		double d1=0;
+
+		if (edgeInRing->getValue(cur_py, cur_px)==0)
+			continue;
 		
-		if (cos(theta)>0)
-			cur_px=ceil(c_x+r*cos(theta));
-		else
-			cur_px=floor(c_x+r*cos(theta));
+		d2=sqrt(pow(double(cur_px-centerX),2)+pow(double(cur_py-centerY),2));
 		
-		if (sin(theta)>0)
-			cur_py=ceil(c_y+r*sin(theta));
-		else
-			cur_py=floor(c_y+r*sin(theta));
-		
-		
-		if (cos(theta)>0)
-			cur_px1=ceil(c_x+(r+1)*cos(theta));
-		else
-			cur_px1=floor(c_x+(r+1)*cos(theta));
-		
-		if (sin(theta)>0)
-			cur_py1=ceil(c_y+(r+1)*sin(theta));
-		else
-			cur_py1=floor(c_y+(r+1)*sin(theta));
-		
-		d2=sqrt(pow(double(cur_px-c_x),2)+pow(double(cur_py-c_y),2));
-		
-		d1=sqrt(pow(double(cur_px1-c_x),2)+pow(double(cur_py1-c_y),2));
-		
-		//cur_px=cur_px1;
-		//cur_py=cur_py1;
-		
-	//	
-//		cur_px=cur_i; 
-//		cur_py=cur_j;
-		//pow(double(cur_px),2)+pow(double(cur_py),2)<pow((r+1),2)&& 
-//		double d=sqrt(pow(double(cur_px),2)+pow(double(cur_py),2));
-//		double d2=pow((r+2),2);
-//		double d1=pow(r, 2);
-		
-		//if ((pow(double(cur_px),2)+pow(double(cur_py),2))<=pow((r+2),2))
+
+		if (d2<=r+2 && d2>=r)
 		{
-		
-	//	int cur_px=round(c_x+r*cos(theta));
-	//	int cur_py=round(c_y+r*sin(theta));
 		
 		if (FlagEdge.getValue(cur_py, cur_px)) 
 			continue;
 		
-		if (EdgeInRing->getValue(cur_py, cur_px)==255) {
+		if (edgeInRing->getValue(cur_py, cur_px)==255) {
 			
 			if(!seq->ele.empty()) //allocate memory to store edge points of the next contour
 			{
@@ -125,7 +85,7 @@ void ImageProcessing::getEdgesFrom(double r)
 			  }
 				else
 				{
-					TrackEdgePixels(cur_n, nei_list, c, FlagEdge);
+					trackEdgePixels(cur_n, nei_list, c, FlagEdge);
 				}
 				
 			}
@@ -136,7 +96,7 @@ void ImageProcessing::getEdgesFrom(double r)
 	
 }
 
-void ImageProcessing::TrackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& FlagEdge)
+void ImageProcessing::trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& FlagEdge)
 {
 	int cur_px,cur_py;
 
@@ -155,7 +115,7 @@ void ImageProcessing::TrackEdgePixels(int cur_n, int nei_list[][8], MyContour* c
 		if (local_n==0)
 			continue;
 		else
-			TrackEdgePixels(local_n, local_nei_list, c, FlagEdge);	
+			trackEdgePixels(local_n, local_nei_list, c, FlagEdge);	
 			
 			}
 }
@@ -173,7 +133,7 @@ void ImageProcessing::TrackEdgePixels(int cur_n, int nei_list[][8], MyContour* c
 				reg_y=cur_py+j;
 				
 				flag_edge=FlagEdge.getValue(reg_y, reg_x);
-				reg_v=EdgeInRing->getValue(reg_y, reg_x);
+				reg_v=edgeInRing->getValue(reg_y, reg_x);
 				
 				if (flag_edge!=1&& reg_v==255) // if the current point is not among the detected edge points, and it is an edge point
 				{
@@ -214,10 +174,7 @@ void ImageProcessing::saveContours(const char* s)
 		{ 
 			MyPoint p;
 			p=c->ele[j];
-			//printf(	"(%d,%d)\n", p.x, p.y );
 			outFile<<p.x<<" "<<p.y<<endl;
-			
-			//((uchar *)(img_tracked_e->imageData + p.y*img_tracked_e->widthStep))[p.x*img_tracked_e->nChannels + 2] = 255; 
 		} 
 		
 		c=c->c_next;
@@ -240,8 +197,7 @@ void ImageProcessing::showDetectedContours()
 	{uchar* ptr = (uchar*) (img_tracked_e->imageData + i * img_tracked_e->widthStep);
 		for (int j=0; j<width;j++)
 		{
-			ptr[j*img_tracked_e->nChannels+1]=.1*circleMask->getValue(i,j);
-//			ptr[j*img->nChannels+1]=Myedge->getValue(i,j);
+			ptr[j*img_tracked_e->nChannels+1]=.1*ringMask->getValue(i,j);
 			ptr[j*img_tracked_e->nChannels]=myEdge->getValue(i,j);
 			
 		}
@@ -268,7 +224,6 @@ void ImageProcessing::showDetectedContours()
 	
 	
     cvReleaseImage( &img_tracked_e );
-	//cvWaitKey(0);
     cvDestroyWindow( detectedEdgeName );
 	return;
 }

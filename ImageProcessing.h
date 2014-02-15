@@ -3,7 +3,7 @@
  *  retinal
  *
  *  Created by Juan Lu on 11/02/14.
- *  Copyright 2014 Melb uni. All rights reserved.
+ *  
  *
  */
 
@@ -32,29 +32,29 @@ class ImageProcessing
 {
 private:
 	Matrix<double> *myEdge;
-	Matrix<double> *circleMask;
-	Matrix<double> *EdgeInRing;
-	int c_x;
-	int c_y;
+	Matrix<double> *ringMask;
+	Matrix<double> *edgeInRing;
+	int centerX;
+	int centerY;
 	int height;
     int width;
     MyContour* seq;
 	
 	void getEdgesFrom(double r);
-	void TrackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& FlagEdge );
+	void trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& FlagEdge );
 	int findNeighbouringEdgePoint(int (&nei_list)[2][8], MyContour* c, Matrix<bool>& FlagEdge, int cur_px, int cur_py);
 	
 public:
-	ImageProcessing (const int center_x, const int center_y, const int ImgH, const int ImgW)
+	ImageProcessing (const int centerX, const int centerY, const int ImgH, const int ImgW)
 	{
-		c_x=center_x;
-		c_y=center_y;
+		this->centerX=centerX;
+		this->centerY=centerY;
 		height=ImgH;
 		width=ImgW;
 		
 		myEdge=new Matrix<double>(height, width);
-		circleMask=new Matrix<double>(height, width);
-		EdgeInRing=new Matrix<double>(height, width);
+		ringMask=new Matrix<double>(height, width);
+		edgeInRing=new Matrix<double>(height, width);
 		
 		seq=new MyContour();
 	}
@@ -73,7 +73,7 @@ public:
 	
 	IplImage* getEdgeInRingMaskImage(IplImage* img)
 	{
-		 img=EdgeInRing->Matrix2Img(img);
+		 img=edgeInRing->Matrix2Img(img);
 		
 		return img;
 	}
@@ -85,8 +85,8 @@ public:
 	~ImageProcessing()
 	{
 		delete myEdge;
-		delete circleMask;
-		delete EdgeInRing;
+		delete ringMask;
+		delete edgeInRing;
 		
 		while(seq)		
 		{  
