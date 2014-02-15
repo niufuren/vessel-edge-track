@@ -4,3 +4,6 @@ This project aims to track edge points starting from an inner circle of a ring m
 
 An example of a retinal image is shown below:
 
+
+
+The processing result is the image below, where Canny edge detection is marked in blue, the ring mask is marked in green, and the tracked edge points are marked in red. The detailed coordinates of the tracked edge points can be found in 
