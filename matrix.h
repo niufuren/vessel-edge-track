@@ -40,11 +40,11 @@ public:
 	
 	Matrix(const Matrix<T>& m);
 	
-	void InitMatrix();
+	void initMatrix();
 		
-	Matrix<T>& SubMatrix(Matrix<T>& m1, Matrix<T>& m2);
-	Matrix<T>& AndMatrix(Matrix<T> m1, Matrix<T> m2);
-	Matrix<T>& CreateCircleMask(int c_x, int c_y, double rad);
+	Matrix<T>& subMatrix(Matrix<T>& m1, Matrix<T>& m2);
+	Matrix<T>& andMatrix(Matrix<T> m1, Matrix<T> m2);
+	Matrix<T>& createCircleMask(int c_x, int c_y, double rad);
 
 	Matrix<T>& Img2Matrix(IplImage* img);
 	

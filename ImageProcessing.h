@@ -31,24 +31,24 @@ typedef struct MyContour{
 class ImageProcessing
 {
 private:
-	Matrix<double> *myEdge;
-	Matrix<double> *ringMask;
-	Matrix<double> *edgeInRing;
+	Matrix<double> *myEdge; //save the canny edge detection result
+	Matrix<double> *ringMask; 
+	Matrix<double> *edgeInRing; // edges in the ring mask
 	int centerX;
 	int centerY;
 	int height;
     int width;
-    MyContour* seq;
+    MyContour* seq; //tracked edge points are saved in *seq
 	
 	void getEdgesFrom(double r);
-	void trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& FlagEdge );
-	int findNeighbouringEdgePoint(int (&nei_list)[2][8], MyContour* c, Matrix<bool>& FlagEdge, int cur_px, int cur_py);
+	void trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& flagEdge );
+	int findNeighbouringEdgePoint(int (&nei_list)[2][8], MyContour* c, Matrix<bool>& flagEdge, int cur_px, int cur_py);
 	
 public:
-	ImageProcessing (const int centerX, const int centerY, const int ImgH, const int ImgW)
+	ImageProcessing (const int pointX, const int pointY, const int ImgH, const int ImgW)
 	{
-		this->centerX=centerX;
-		this->centerY=centerY;
+		centerX=pointX;
+		centerY=pointY;
 		height=ImgH;
 		width=ImgW;
 		
@@ -59,7 +59,7 @@ public:
 		seq=new MyContour();
 	}
 	
-	void setEdges(IplImage* img)
+	void setEdgeImage(IplImage* img)
 	{
 		myEdge->Img2Matrix(img);
 	}

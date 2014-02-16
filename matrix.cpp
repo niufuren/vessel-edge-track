@@ -21,7 +21,7 @@ T** Matrix<T>:: createMatrix(int nRows, int nCols)
 }
 
 template<class T>
-void Matrix<T>:: InitMatrix()
+void Matrix<T>:: initMatrix()
 {
 	for (int i=0; i<nRows; i++)
 		for (int j=0; j<nCols;j++)
@@ -47,7 +47,7 @@ Matrix<T>:: Matrix(const Matrix<T>& m)
 
 
 template<class T>
-Matrix<T>& Matrix<T>::AndMatrix(Matrix<T> m1, Matrix<T> m2)
+Matrix<T>& Matrix<T>::andMatrix(Matrix<T> m1, Matrix<T> m2)
 {
 	for (int i=0; i<nCols; i++)
 		for (int j=0; j<nRows; j++)
@@ -63,7 +63,7 @@ Matrix<T>& Matrix<T>::AndMatrix(Matrix<T> m1, Matrix<T> m2)
 }
 
 template<class T>
-Matrix<T>& Matrix<T>:: SubMatrix(Matrix<T>& m1, Matrix<T>& m2)
+Matrix<T>& Matrix<T>:: subMatrix(Matrix<T>& m1, Matrix<T>& m2)
 {
 	for (int i=0; i<nCols; i++)
 		for (int j=0; j<nRows; j++)
@@ -81,7 +81,7 @@ Matrix<T>& Matrix<T>:: SubMatrix(Matrix<T>& m1, Matrix<T>& m2)
 }
 
 template<class T>
-Matrix<T>& Matrix<T>::CreateCircleMask ( int c_x, int c_y, double rad)
+Matrix<T>& Matrix<T>::createCircleMask ( int c_x, int c_y, double rad)
 {
 	double d; //distance^2
 	for (int i=0; i<nCols; i++)

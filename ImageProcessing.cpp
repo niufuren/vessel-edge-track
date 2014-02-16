@@ -17,19 +17,19 @@ void ImageProcessing::setRingMaskAndEdgeInRing(double r1, double r2)
     Matrix<double> m1(height,width);
 	Matrix<double> m2(height,width);
 	
-	m1.CreateCircleMask(centerX,centerY,r1);
-	m2.CreateCircleMask(centerX,centerY,r2);
+	m1.createCircleMask(centerX,centerY,r1);
+	m2.createCircleMask(centerX,centerY,r2);
 	
-	ringMask->SubMatrix(m1, m2);
-	edgeInRing->AndMatrix(*myEdge, *ringMask);
+	ringMask->subMatrix(m1, m2);
+	edgeInRing->andMatrix(*myEdge, *ringMask);
 		
 }
 
 void ImageProcessing::getEdgesFrom(double r)
 {
 	
-	Matrix<bool> FlagEdge(height, width);
-	FlagEdge.InitMatrix();
+	Matrix<bool> flagEdge(height, width);
+	flagEdge.initMatrix();
 	
 	MyContour* c=seq;
 	MyContour* temp_seq;
@@ -51,7 +51,7 @@ void ImageProcessing::getEdgesFrom(double r)
 		if (d2<=r+2 && d2>=r)
 		{
 		
-		if (FlagEdge.getValue(cur_py, cur_px)) 
+		if (flagEdge.getValue(cur_py, cur_px)) 
 			continue;
 		
 		if (edgeInRing->getValue(cur_py, cur_px)==255) {
@@ -65,7 +65,7 @@ void ImageProcessing::getEdgesFrom(double r)
 						c=c->c_next;
 			}
 			
-			FlagEdge.setValue(cur_py,cur_px,1);
+			flagEdge.setValue(cur_py,cur_px,1);
 			
 			MyPoint p={cur_px,cur_py};
 			c->ele.push_back(p);
@@ -77,7 +77,7 @@ void ImageProcessing::getEdgesFrom(double r)
 				int cur_n=0; // number of connected components
 				
 				
-				cur_n=findNeighbouringEdgePoint(nei_list, c, FlagEdge, cur_px, cur_py);
+				cur_n=findNeighbouringEdgePoint(nei_list, c, flagEdge, cur_px, cur_py);
 							 
 			  if(cur_n==0)
 			  {
@@ -85,7 +85,7 @@ void ImageProcessing::getEdgesFrom(double r)
 			  }
 				else
 				{
-					trackEdgePixels(cur_n, nei_list, c, FlagEdge);
+					trackEdgePixels(cur_n, nei_list, c, flagEdge);
 				}
 				
 			}
@@ -96,7 +96,7 @@ void ImageProcessing::getEdgesFrom(double r)
 	
 }
 
-void ImageProcessing::trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& FlagEdge)
+void ImageProcessing::trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c, Matrix<bool>& flagEdge)
 {
 	int cur_px,cur_py;
 
@@ -109,18 +109,18 @@ void ImageProcessing::trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c
 		
 		int local_n=0;
 		
-		local_n=findNeighbouringEdgePoint(local_nei_list, c, FlagEdge, cur_px, cur_py);
+		local_n=findNeighbouringEdgePoint(local_nei_list, c, flagEdge, cur_px, cur_py);
 		
 		
 		if (local_n==0)
 			continue;
 		else
-			trackEdgePixels(local_n, local_nei_list, c, FlagEdge);	
+			trackEdgePixels(local_n, local_nei_list, c, flagEdge);	
 			
 			}
 }
 
-	int ImageProcessing::findNeighbouringEdgePoint(int  (&nei_list)[2][8], MyContour* c, Matrix<bool>& FlagEdge, int cur_px, int cur_py)
+	int ImageProcessing::findNeighbouringEdgePoint(int  (&nei_list)[2][8], MyContour* c, Matrix<bool>& flagEdge, int cur_px, int cur_py)
 	{
         int cur_n=0;
 		int reg_x, reg_y;
@@ -132,13 +132,13 @@ void ImageProcessing::trackEdgePixels(int cur_n, int nei_list[][8], MyContour* c
 				reg_x=cur_px+i;
 				reg_y=cur_py+j;
 				
-				flag_edge=FlagEdge.getValue(reg_y, reg_x);
+				flag_edge=flagEdge.getValue(reg_y, reg_x);
 				reg_v=edgeInRing->getValue(reg_y, reg_x);
 				
 				if (flag_edge!=1&& reg_v==255) // if the current point is not among the detected edge points, and it is an edge point
 				{
 					
-					FlagEdge.setValue(reg_y,reg_x,1);
+					flagEdge.setValue(reg_y,reg_x,1);
 					MyPoint p={reg_x, reg_y};
 					c->ele.push_back(p);
 					
